@@ -231,6 +231,7 @@ class BMSMonitorApp:
         self.rx_frame_count = 0
         self.last_packet_time: Optional[float] = None
         self.closing_in_progress = False
+        self.process_loop_after_id: Optional[str] = None
 
         self._configure_window_branding()
         self._configure_styles()
@@ -618,7 +619,9 @@ class BMSMonitorApp:
             self._update_stats_label()
 
         if not self.closing_in_progress:
-            self.root.after(PROCESS_LOOP_DELAY_MS, self.process_incoming_data)
+            self.process_loop_after_id = self.root.after(PROCESS_LOOP_DELAY_MS, self.process_incoming_data)
+        else:
+            self.process_loop_after_id = None
 
     def update_gui(self, data: Dict) -> None:
         flat = data["flat"]
@@ -699,6 +702,14 @@ class BMSMonitorApp:
                 return
 
         self.closing_in_progress = True
+        
+        if self.process_loop_after_id:
+            try:
+                self.root.after_cancel(self.process_loop_after_id)
+            except tk.TclError:
+                pass
+            self.process_loop_after_id = None
+            
         try:
             if self.csv_thread:
                 self.csv_thread.stop_logging()
