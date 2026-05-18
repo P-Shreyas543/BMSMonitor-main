@@ -342,7 +342,7 @@ class BMSMonitorApp:
         file_group.pack(side=tk.LEFT, padx=6)
         tk.Label(file_group, text="View Tools", bg=COLORS["bg_light"], fg=COLORS["text_gray"], font=FONTS["mono_small"]).pack(side=tk.LEFT, padx=(2, 8))
         self.btn_clear = self._create_toolbar_button(file_group, "CLEAR VIEW", self.clear_all_values, COLORS["btn_neutral"], 12)
-        self.btn_ekf = self._create_toolbar_button(file_group, "EKF ANALYZER", self.open_ekf_window, COLORS["btn_neutral"], 14)
+
 
         tk.Frame(btn_frame, width=1, bg="#cccccc").pack(side=tk.LEFT, fill="y", padx=12, pady=5)
 
@@ -394,12 +394,6 @@ class BMSMonitorApp:
         button.pack(side=tk.LEFT, padx=4, pady=2)
         return button
         
-    def open_ekf_window(self) -> None:
-        if hasattr(self, 'ekf_window') and self.ekf_window and self.ekf_window.window.winfo_exists():
-            self.ekf_window.window.lift()
-            return
-        from .ekf_window import EKFAnalyzerWindow
-        self.ekf_window = EKFAnalyzerWindow(self.root, FONTS, COLORS)
 
     def update_ports(self) -> None:
         try:
@@ -605,15 +599,7 @@ class BMSMonitorApp:
             if self.csv_thread and self.csv_thread.running:
                 self.csv_thread.queue.put((rx_time, data["flat"], data["stats"]))
 
-            if hasattr(self, 'ekf_window') and self.ekf_window and self.ekf_window.window.winfo_exists():
-                try:
-                    # Based on FRAME_CONFIG: Index 0 is Pack Voltage (V), Index 1 is Pack Current (A)
-                    pack_current = data["flat"][1]
-                    # Fetch the minimum cell voltage from calculated stats, fallback to pack voltage if missing
-                    min_cell_voltage = data["stats"].get("Cells_min", data["flat"][0])
-                    self.ekf_window.push_live_data(pack_current, min_cell_voltage, rx_time)
-                except (IndexError, TypeError):
-                    pass
+
 
             self.update_gui(data)
             self._update_stats_label()

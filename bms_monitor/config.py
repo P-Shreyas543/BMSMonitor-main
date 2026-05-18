@@ -21,9 +21,19 @@ FRAME_CONFIG = [
     {"name": "BMS State", "fmt": "uint8", "unit": "Enum"},
     {"name": "SoC (OCV)", "fmt": "uint16", "unit": "%", "factor": 0.1},
     {"name": "SoC (Coulomb)", "fmt": "uint16", "unit": "%", "factor": 0.1},
-    {"name": "SoH", "fmt": "uint8", "unit": "%"},
+    {"name": "SoH", "fmt": "uint16", "unit": "%", "factor": 0.01}, 
     {"name": "Cycle Count", "fmt": "uint16", "unit": "Cycles"},
     {"name": "Cumulative Cap", "fmt": "uint32", "unit": "Ah"},
+    {"name": "Init SoC", "fmt": "uint16", "unit": "%"},
+    {"name": "Delta Q", "fmt": "uint16", "unit": "Ah"},
+    {"name": "SoC Before Activity", "fmt": "uint16", "unit": "%"},
+    {"name": "SoC After Charge End", "fmt": "uint16", "unit": "%"},
+    {"name": "Delta SoC", "fmt": "uint16", "unit": "%"},
+    {"name": "SoC After Activity", "fmt": "uint16", "unit": "%"},
+    {"name": "RM", "fmt": "uint16", "unit": "%"},
+    {"name": "Q Start", "fmt": "uint16", "unit": "%"},
+    {"name": "FCC", "fmt": "uint16", "unit": "Ah"},
+    {"name": "Impedance SoH", "fmt": "uint16", "unit": "%"}
 ]
 
 CALC_GROUPS = {
